@@ -1,0 +1,91 @@
+Crypted File System (cfs) & Encrypted Session Manager (esm) available
+---------------------------------------------------------------------
+
+Matt Blaze's Crypted File System cfs-1.3.3 including 
+Encrypted Session Manager esm-1.0.2 are now available 
+as binary and source rpms at: 
+	ftp.hacktic.nl/pub/replay/pub/incoming/cfs-1.3.3-2*.rpm
+should go later to:
+	ftp.hacktic.nl/pub/replay/pub/crypto/CRYPTOapps/cfs-1.3.3-2*.rpm
+
+
+
+from the cfs manual:
+
+[...]
+CFS pushes encryption services into the Unix(tm) file system.  It
+supports secure storage at the system level through a standard Unix
+file system interface to encrypted files.  Users associate a
+cryptographic key with the directories they wish to protect.  Files in
+these directories (as well as their pathname components) are
+transparently encrypted and decrypted with the specified key without
+further user intervention; cleartext is never stored on a disk or sent
+to a remote file server.  CFS employs a novel combination of DES
+stream and codebook cipher modes to provide high security with good
+performance on a modern workstation.  CFS can use any available file
+system for its underlying storage without modification, including
+remote file servers such as NFS.  System management functions, such as
+file backup, work in a normal manner and without knowledge of the key.
+[...]
+CFS runs entirely at user level, as a local NFS server running on the
+client machine's "loopback" interface. 
+[...end cfs manual]
+
+
+from README.esm:
+
+[...]
+ESM is an encrypted session layer for managing remote encrypted
+sessions.  It does 1024 bit DH key exchange (from RSAREF)
+and 3-des in 8bit cfb mode for the traffic encryption.  See the
+man page (esm.1 in this distribution).
+[...]
+In most applications, an encrypting Telnet is a better choice (and
+network-layer encryption better still).  ESM's main purpose is providing
+end-to-end encryption across a firewall.  It also requires no "system
+support" to install, which is both an advantage and a disadvantage.
+[...end README.esm]
+
+
+
+Check of md5 fingerprint should give you
+	670a06a038968292d74fe0a5d5c391ff  cfs-1.3.3-2.i386.rpm
+	cc47c9ccd638fc10cd0b10744e169410  cfs-1.3.3-2.src.rpm
+
+If you don't trust me, go and check the sources. 
+
+
+PS:   cfs will install a file named /usr/bin/ssh and /usr/man/man1/ssh.1. 
+      If you have installed secure shell (=ssh) in /usr/bin/ be shure to 
+      rename it before the install of cfs-1.3.3 to avoid overwriting. 
+
+
+PPS:  cfs-1.3.3 is "export restricted" because some people think it is 
+      explosive like ammunition. So be a nice guy, support the crypto 
+      industry outside the US and don't export this stuff from US/Canada 
+      to the rest of the world. If you live in a country like France 
+      or China, you wont have the freedom at all to use cfs or esm. 
+
+
+ 
+Regards from 
+
+hal@darkstar.frop.org 
+(You knew it since Linux 0.9x. This site is real. ;)
+
+
+
+-------------------------------------------------------------------------
+"LAWFUL USE OF ENCRYPTION.-It shall be lawful for any person 
+within any State of the United States... to use any encryption, 
+regardless of encryption algorithm selected, encryption key 
+length chosen, or implementation technique or medium used...
+except as provided in this Act... or in any other law."
+
+-- Senate Bill S.1587 - The Encrypted Communications Privacy Act
+introduced 5 March 1996 by Sen. Leahy (D-VT) and Rep. Goodlatte (R-VA)
+details & analysis available from Electronic Privacy Information Center
+and Voters Telecommunications Watch.
+-------------------------------------------------------------------------
+
+ 

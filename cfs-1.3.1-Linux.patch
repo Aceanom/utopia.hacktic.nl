@@ -1,0 +1,1653 @@
+diff -crN ./Makefile ../cfs-1.3.1-LnxSlckwr/Makefile
+*** ./Makefile	Tue Dec 19 18:58:40 1995
+--- ../cfs-1.3.1-LnxSlckwr/Makefile	Tue Dec 19 20:56:03 1995
+***************
+*** 64,76 ****
+  #CC=cc
+  #COPT=-O -DNOT_ANSI_C -DPROTOTYPES=0
+  # for gcc, use
+! CC=gcc
+  COPT=-O2 -DPROTOTYPES=1
+  
+  #1B: paths:
+  BINDIR=/usr/local/bin
+! ETCDIR=/usr/local/etc
+! PRINTCMD=enscript -Gr2
+  # you only need RSAREF for ESM
+  RSALIB=/usr/mab/rsaref/install/rsaref.a
+  RINCLUDES=/usr/mab/rsaref/source
+--- 64,100 ----
+  #CC=cc
+  #COPT=-O -DNOT_ANSI_C -DPROTOTYPES=0
+  # for gcc, use
+! CC=gcc -Dd_fileno=d_ino  \
+! -Dnfsproc_null_2_svc=nfsproc_null_2     \
+! -Dnfsproc_getattr_2_svc=nfsproc_getattr_2       \
+! -Dnfsproc_setattr_2_svc=nfsproc_setattr_2       \
+! -Dnfsproc_root_2_svc=nfsproc_root_2     \
+! -Dnfsproc_lookup_2_svc=nfsproc_lookup_2 \
+! -Dnfsproc_readlink_2_svc=nfsproc_readlink_2     \
+! -Dnfsproc_read_2_svc=nfsproc_read_2     \
+! -Dnfsproc_writecache_2_svc=nfsproc_writecache_2 \
+! -Dnfsproc_write_2_svc=nfsproc_write_2   \
+! -Dnfsproc_create_2_svc=nfsproc_create_2 \
+! -Dnfsproc_remove_2_svc=nfsproc_remove_2 \
+! -Dnfsproc_rename_2_svc=nfsproc_rename_2 \
+! -Dnfsproc_link_2_svc=nfsproc_link_2     \
+! -Dnfsproc_symlink_2_svc=nfsproc_symlink_2       \
+! -Dnfsproc_mkdir_2_svc=nfsproc_mkdir_2   \
+! -Dnfsproc_rmdir_2_svc=nfsproc_rmdir_2   \
+! -Dnfsproc_readdir_2_svc=nfsproc_readdir_2       \
+! -Dnfsproc_statfs_2_svc=nfsproc_statfs_2 \
+! -Dadmproc_null_1_svc=admproc_null_1     \
+! -Dadmproc_attach_1_svc=admproc_attach_1 \
+! -Dadmproc_detach_1_svc=admproc_detach_1 \
+! -Dadmproc_ls_1_svc=admproc_ls_1
+! 
+! 
+  COPT=-O2 -DPROTOTYPES=1
+  
+  #1B: paths:
+  BINDIR=/usr/local/bin
+! SBINDIR=/usr/local/sbin
+! PRINTCMD=lpr
+  # you only need RSAREF for ESM
+  RSALIB=/usr/mab/rsaref/install/rsaref.a
+  RINCLUDES=/usr/mab/rsaref/source
+***************
+*** 104,110 ****
+  # won't compile out of the box, this is the most likely problem.  Replace
+  # rpcgen, and things should work fine.
+  # See README.linux if you can't make things work.
+! #CFLAGS=$(COPT) -I$(RINCLUDES)
+  #LIBS=
+  #COMPAT=
+  
+--- 128,134 ----
+  # won't compile out of the box, this is the most likely problem.  Replace
+  # rpcgen, and things should work fine.
+  # See README.linux if you can't make things work.
+! CFLAGS=$(COPT) -I$(RINCLUDES)
+  #LIBS=
+  #COMPAT=
+  
+***************
+*** 239,266 ****
+  $(COBJS): nfsproto.h admproto.h cfs.h mcg.h safer.h shs.h
+  
+  nfsproto_xdr.c: nfsproto.x
+! 	rpcgen -c -o nfsproto_xdr.c nfsproto.x 
+  
+  nfsproto_svr.c: nfsproto.x
+! 	rpcgen -m -o nfsproto_svr.c nfsproto.x 
+  
+  nfsproto.h: nfsproto.x
+! 	rpcgen -h -o nfsproto.h nfsproto.x
+  
+  admproto_xdr.c: admproto.x
+! 	rpcgen -c -o admproto_xdr.c admproto.x 
+  
+  admproto_svr.c: admproto.x
+! 	rpcgen -m -o admproto_svr.c admproto.x 
+  
+  admproto.h: admproto.x
+! 	rpcgen -h -o admproto.h admproto.x
+  
+  admproto_clnt.c: admproto.x
+! 	rpcgen -l -o admproto_clnt.c admproto.x 
+  
+  clean:
+! 	rm -f $(OBJS) $(COBJS) $(OTHERS) cfsd cmkdir cattach cdetach cname ccat
+  	rm -f $(EOBJS) esm
+  
+  cfs.shar: $(SRCS) $(ESRCS) $(MANS)
+--- 263,290 ----
+  $(COBJS): nfsproto.h admproto.h cfs.h mcg.h safer.h shs.h
+  
+  nfsproto_xdr.c: nfsproto.x
+! #	rpcgen -c -o nfsproto_xdr.c nfsproto.x 
+  
+  nfsproto_svr.c: nfsproto.x
+! #	rpcgen -m -o nfsproto_svr.c nfsproto.x 
+  
+  nfsproto.h: nfsproto.x
+! #	rpcgen -h -o nfsproto.h nfsproto.x
+  
+  admproto_xdr.c: admproto.x
+! #	rpcgen -c -o admproto_xdr.c admproto.x 
+  
+  admproto_svr.c: admproto.x
+! #	rpcgen -m -o admproto_svr.c admproto.x 
+  
+  admproto.h: admproto.x
+! #	rpcgen -h -o admproto.h admproto.x
+  
+  admproto_clnt.c: admproto.x
+! #	rpcgen -l -o admproto_clnt.c admproto.x 
+  
+  clean:
+! 	rm -f $(OBJS) $(COBJS) cfsd cmkdir cattach cdetach cname ccat
+  	rm -f $(EOBJS) esm
+  
+  cfs.shar: $(SRCS) $(ESRCS) $(MANS)
+***************
+*** 270,276 ****
+  	$(PRINTCMD) $(SRCS) cfs.h mcg.h safer.h admproto.h nfsproto.h
+  
+  install_cfs: cfsd cattach cdetach cmkdir
+! 	install -m 0755 -c -o root cfsd $(ETCDIR)
+  	install -m 0755 -c -o root cattach cdetach cmkdir cpasswd ssh \
+                  cname ccat $(BINDIR)
+  #	install -m 0755 i o $(BINDIR)
+--- 294,300 ----
+  	$(PRINTCMD) $(SRCS) cfs.h mcg.h safer.h admproto.h nfsproto.h
+  
+  install_cfs: cfsd cattach cdetach cmkdir
+! 	install -m 0755 -c -o root cfsd $(SBINDIR)
+  	install -m 0755 -c -o root cattach cdetach cmkdir cpasswd ssh \
+                  cname ccat $(BINDIR)
+  #	install -m 0755 i o $(BINDIR)
+diff -crN ./README.install ../cfs-1.3.1-LnxSlckwr/README.install
+*** ./README.install	Tue Dec 19 18:58:40 1995
+--- ../cfs-1.3.1-LnxSlckwr/README.install	Tue Dec 19 19:40:25 1995
+***************
+*** 56,71 ****
+  7) add this to the end of /etc/rc.local (some place after you have
+  mountd started):
+  
+! if [ -x /usr/local/etc/cfsd ]; then
+! 	/usr/local/etc/cfsd && \
+! 		/etc/mount -o port=3049,intr localhost:/null /crypt
+  fi
+  
+  7a) on some platforms (especially BSDI), you may get better CFS
+  performance with a smaller mount blocksize:
+! if [ -x /usr/local/etc/cfsd ]; then
+!    /usr/local/etc/cfsd && \
+!       /etc/mount -o port=3049,intr,rsize=2048,wsize=2048 localhost:/null /crypt
+  fi
+  
+  8) run the commands in step 7 by hand to get it started now.  you may have to
+--- 56,71 ----
+  7) add this to the end of /etc/rc.local (some place after you have
+  mountd started):
+  
+! if [ -x /usr/local/sbin/cfsd ]; then
+! 	/usr/local/sbin/cfsd && \
+! 		/bin/mount -o port=3049,intr localhost:/null /crypt
+  fi
+  
+  7a) on some platforms (especially BSDI), you may get better CFS
+  performance with a smaller mount blocksize:
+! if [ -x /usr/local/sbin/cfsd ]; then
+!    /usr/local/sbin/cfsd && \
+!       /bin/mount -o port=3049,intr,rsize=2048,wsize=2048 localhost:/null /crypt
+  fi
+  
+  8) run the commands in step 7 by hand to get it started now.  you may have to
+diff -crN ./admproto.h ../cfs-1.3.1-LnxSlckwr/admproto.h
+*** ./admproto.h	Thu Jan  1 01:00:00 1970
+--- ../cfs-1.3.1-LnxSlckwr/admproto.h	Mon Dec 18 04:00:52 1995
+***************
+*** 0 ****
+--- 1,119 ----
++ /*
++  * Please do not edit this file.
++  * It was generated using rpcgen.
++  */
++ 
++ #include <rpc/types.h>
++ 
++ 
++ enum cfsstat {
++ 	CFS_OK = 0,
++ 	CFSERR_PERM = 1,
++ 	CFSERR_IFULL = 2,
++ 	CFSERR_NOINS = 3,
++ 	CFSERR_EXIST = 4,
++ 	CFSERR_NODIR = 5,
++ 	CFSERR_BADKEY = 6,
++ 	CFSERR_BADNAME = 7,
++ };
++ typedef enum cfsstat cfsstat;
++ bool_t xdr_cfsstat();
++ 
++ enum ciphers {
++ 	CFS_STD_DES = 0,
++ 	CFS_THREE_DES = 1,
++ 	CFS_IDEA = 2,
++ 	CFS_BLOWFISH = 3,
++ 	CFS_SKIPJACK = 4,
++ 	CFS_MACGUFFIN = 5,
++ 	CFS_SAFER_SK128 = 6,
++ };
++ typedef enum ciphers ciphers;
++ bool_t xdr_ciphers();
++ #define CFS_MAXCOMP 255
++ #define CFS_MAXNAME 1024
++ 
++ struct cfs_adm_deskey {
++ 	long pl;
++ 	u_char primary[8];
++ 	u_char secondary[8];
++ };
++ typedef struct cfs_adm_deskey cfs_adm_deskey;
++ bool_t xdr_cfs_adm_deskey();
++ 
++ struct cfs_adm_3deskey {
++ 	long pl;
++ 	u_char primary1[8];
++ 	u_char primary2[8];
++ 	u_char secondary1[8];
++ 	u_char secondary2[8];
++ };
++ typedef struct cfs_adm_3deskey cfs_adm_3deskey;
++ bool_t xdr_cfs_adm_3deskey();
++ 
++ struct cfs_adm_blowkey {
++ 	long pl;
++ 	u_char primary[16];
++ 	u_char secondary[16];
++ };
++ typedef struct cfs_adm_blowkey cfs_adm_blowkey;
++ bool_t xdr_cfs_adm_blowkey();
++ 
++ struct cfs_adm_mcgkey {
++ 	long pl;
++ 	u_char primary[16];
++ 	u_char secondary[16];
++ };
++ typedef struct cfs_adm_mcgkey cfs_adm_mcgkey;
++ bool_t xdr_cfs_adm_mcgkey();
++ 
++ struct cfs_adm_saferkey {
++ 	long pl;
++ 	u_char primary[16];
++ 	u_char secondary[16];
++ };
++ typedef struct cfs_adm_saferkey cfs_adm_saferkey;
++ bool_t xdr_cfs_adm_saferkey();
++ 
++ struct cfs_admkey {
++ 	ciphers cipher;
++ 	union {
++ 		cfs_adm_deskey deskey;
++ 		cfs_adm_3deskey des3key;
++ 		cfs_adm_blowkey blowkey;
++ 		cfs_adm_mcgkey mcgkey;
++ 		cfs_adm_saferkey saferkey;
++ 	} cfs_admkey_u;
++ };
++ typedef struct cfs_admkey cfs_admkey;
++ bool_t xdr_cfs_admkey();
++ 
++ struct cfs_attachargs {
++ 	char *dirname;
++ 	char *name;
++ 	cfs_admkey key;
++ 	int uid;
++ 	int highsec;
++ 	bool_t anon;
++ 	int expire;
++ 	int idle;
++ 	int smsize;
++ };
++ typedef struct cfs_attachargs cfs_attachargs;
++ bool_t xdr_cfs_attachargs();
++ 
++ struct cfs_detachargs {
++ 	char *name;
++ 	int uid;
++ };
++ typedef struct cfs_detachargs cfs_detachargs;
++ bool_t xdr_cfs_detachargs();
++ 
++ #define ADM_PROGRAM ((u_long)0x31234567)
++ #define ADM_VERSION ((u_long)2)
++ #define ADMPROC_NULL ((u_long)0)
++ extern void *admproc_null_2();
++ #define ADMPROC_ATTACH ((u_long)1)
++ extern cfsstat *admproc_attach_2();
++ #define ADMPROC_DETACH ((u_long)2)
++ extern cfsstat *admproc_detach_2();
+diff -crN ./admproto_clnt.c ../cfs-1.3.1-LnxSlckwr/admproto_clnt.c
+*** ./admproto_clnt.c	Thu Jan  1 01:00:00 1970
+--- ../cfs-1.3.1-LnxSlckwr/admproto_clnt.c	Mon Dec 18 04:00:52 1995
+***************
+*** 0 ****
+--- 1,52 ----
++ /*
++  * Please do not edit this file.
++  * It was generated using rpcgen.
++  */
++ 
++ #include <rpc/rpc.h>
++ #include "admproto.h"
++ 
++ /* Default timeout can be changed using clnt_control() */
++ static struct timeval TIMEOUT = { 25, 0 };
++ 
++ void *
++ admproc_null_2(argp, clnt)
++ 	void *argp;
++ 	CLIENT *clnt;
++ {
++ 	static char res;
++ 
++ 	bzero((char *)&res, sizeof(res));
++ 	if (clnt_call(clnt, ADMPROC_NULL, xdr_void, argp, xdr_void, &res, TIMEOUT) != RPC_SUCCESS) {
++ 		return (NULL);
++ 	}
++ 	return ((void *)&res);
++ }
++ 
++ cfsstat *
++ admproc_attach_2(argp, clnt)
++ 	cfs_attachargs *argp;
++ 	CLIENT *clnt;
++ {
++ 	static cfsstat res;
++ 
++ 	bzero((char *)&res, sizeof(res));
++ 	if (clnt_call(clnt, ADMPROC_ATTACH, xdr_cfs_attachargs, argp, xdr_cfsstat, &res, TIMEOUT) != RPC_SUCCESS) {
++ 		return (NULL);
++ 	}
++ 	return (&res);
++ }
++ 
++ cfsstat *
++ admproc_detach_2(argp, clnt)
++ 	cfs_detachargs *argp;
++ 	CLIENT *clnt;
++ {
++ 	static cfsstat res;
++ 
++ 	bzero((char *)&res, sizeof(res));
++ 	if (clnt_call(clnt, ADMPROC_DETACH, xdr_cfs_detachargs, argp, xdr_cfsstat, &res, TIMEOUT) != RPC_SUCCESS) {
++ 		return (NULL);
++ 	}
++ 	return (&res);
++ }
+diff -crN ./admproto_svr.c ../cfs-1.3.1-LnxSlckwr/admproto_svr.c
+*** ./admproto_svr.c	Thu Jan  1 01:00:00 1970
+--- ../cfs-1.3.1-LnxSlckwr/admproto_svr.c	Mon Dec 18 04:00:52 1995
+***************
+*** 0 ****
+--- 1,60 ----
++ /*
++  * Please do not edit this file.
++  * It was generated using rpcgen.
++  */
++ 
++ #include <stdio.h>
++ #include <rpc/rpc.h>
++ #include "admproto.h"
++ 
++ void
++ adm_program_2(rqstp, transp)
++ 	struct svc_req *rqstp;
++ 	register SVCXPRT *transp;
++ {
++ 	union {
++ 		cfs_attachargs admproc_attach_2_arg;
++ 		cfs_detachargs admproc_detach_2_arg;
++ 	} argument;
++ 	char *result;
++ 	bool_t (*xdr_argument)(), (*xdr_result)();
++ 	char *(*local)();
++ 
++ 	switch (rqstp->rq_proc) {
++ 	case ADMPROC_NULL:
++ 		xdr_argument = xdr_void;
++ 		xdr_result = xdr_void;
++ 		local = (char *(*)()) admproc_null_2;
++ 		break;
++ 
++ 	case ADMPROC_ATTACH:
++ 		xdr_argument = xdr_cfs_attachargs;
++ 		xdr_result = xdr_cfsstat;
++ 		local = (char *(*)()) admproc_attach_2;
++ 		break;
++ 
++ 	case ADMPROC_DETACH:
++ 		xdr_argument = xdr_cfs_detachargs;
++ 		xdr_result = xdr_cfsstat;
++ 		local = (char *(*)()) admproc_detach_2;
++ 		break;
++ 
++ 	default:
++ 		svcerr_noproc(transp);
++ 		return;
++ 	}
++ 	bzero((char *)&argument, sizeof(argument));
++ 	if (!svc_getargs(transp, xdr_argument, &argument)) {
++ 		svcerr_decode(transp);
++ 		return;
++ 	}
++ 	result = (*local)(&argument, rqstp);
++ 	if (result != NULL && !svc_sendreply(transp, xdr_result, result)) {
++ 		svcerr_systemerr(transp);
++ 	}
++ 	if (!svc_freeargs(transp, xdr_argument, &argument)) {
++ 		fprintf(stderr, "unable to free arguments");
++ 		exit(1);
++ 	}
++ 	return;
++ }
+diff -crN ./admproto_xdr.c ../cfs-1.3.1-LnxSlckwr/admproto_xdr.c
+*** ./admproto_xdr.c	Thu Jan  1 01:00:00 1970
+--- ../cfs-1.3.1-LnxSlckwr/admproto_xdr.c	Mon Dec 18 04:00:52 1995
+***************
+*** 0 ****
+--- 1,207 ----
++ /*
++  * Please do not edit this file.
++  * It was generated using rpcgen.
++  */
++ 
++ #include <rpc/rpc.h>
++ #include "admproto.h"
++ 
++ bool_t
++ xdr_cfsstat(xdrs, objp)
++ 	XDR *xdrs;
++ 	cfsstat *objp;
++ {
++ 	if (!xdr_enum(xdrs, (enum_t *)objp)) {
++ 		return (FALSE);
++ 	}
++ 	return (TRUE);
++ }
++ 
++ bool_t
++ xdr_ciphers(xdrs, objp)
++ 	XDR *xdrs;
++ 	ciphers *objp;
++ {
++ 	if (!xdr_enum(xdrs, (enum_t *)objp)) {
++ 		return (FALSE);
++ 	}
++ 	return (TRUE);
++ }
++ 
++ bool_t
++ xdr_cfs_adm_deskey(xdrs, objp)
++ 	XDR *xdrs;
++ 	cfs_adm_deskey *objp;
++ {
++ 	if (!xdr_long(xdrs, &objp->pl)) {
++ 		return (FALSE);
++ 	}
++ 	if (!xdr_vector(xdrs, (char *)objp->primary, 8, sizeof(u_char), xdr_u_char)) {
++ 		return (FALSE);
++ 	}
++ 	if (!xdr_vector(xdrs, (char *)objp->secondary, 8, sizeof(u_char), xdr_u_char)) {
++ 		return (FALSE);
++ 	}
++ 	return (TRUE);
++ }
++ 
++ bool_t
++ xdr_cfs_adm_3deskey(xdrs, objp)
++ 	XDR *xdrs;
++ 	cfs_adm_3deskey *objp;
++ {
++ 	if (!xdr_long(xdrs, &objp->pl)) {
++ 		return (FALSE);
++ 	}
++ 	if (!xdr_vector(xdrs, (char *)objp->primary1, 8, sizeof(u_char), xdr_u_char)) {
++ 		return (FALSE);
++ 	}
++ 	if (!xdr_vector(xdrs, (char *)objp->primary2, 8, sizeof(u_char), xdr_u_char)) {
++ 		return (FALSE);
++ 	}
++ 	if (!xdr_vector(xdrs, (char *)objp->secondary1, 8, sizeof(u_char), xdr_u_char)) {
++ 		return (FALSE);
++ 	}
++ 	if (!xdr_vector(xdrs, (char *)objp->secondary2, 8, sizeof(u_char), xdr_u_char)) {
++ 		return (FALSE);
++ 	}
++ 	return (TRUE);
++ }
++ 
++ bool_t
++ xdr_cfs_adm_blowkey(xdrs, objp)
++ 	XDR *xdrs;
++ 	cfs_adm_blowkey *objp;
++ {
++ 	if (!xdr_long(xdrs, &objp->pl)) {
++ 		return (FALSE);
++ 	}
++ 	if (!xdr_vector(xdrs, (char *)objp->primary, 16, sizeof(u_char), xdr_u_char)) {
++ 		return (FALSE);
++ 	}
++ 	if (!xdr_vector(xdrs, (char *)objp->secondary, 16, sizeof(u_char), xdr_u_char)) {
++ 		return (FALSE);
++ 	}
++ 	return (TRUE);
++ }
++ 
++ bool_t
++ xdr_cfs_adm_mcgkey(xdrs, objp)
++ 	XDR *xdrs;
++ 	cfs_adm_mcgkey *objp;
++ {
++ 	if (!xdr_long(xdrs, &objp->pl)) {
++ 		return (FALSE);
++ 	}
++ 	if (!xdr_vector(xdrs, (char *)objp->primary, 16, sizeof(u_char), xdr_u_char)) {
++ 		return (FALSE);
++ 	}
++ 	if (!xdr_vector(xdrs, (char *)objp->secondary, 16, sizeof(u_char), xdr_u_char)) {
++ 		return (FALSE);
++ 	}
++ 	return (TRUE);
++ }
++ 
++ bool_t
++ xdr_cfs_adm_saferkey(xdrs, objp)
++ 	XDR *xdrs;
++ 	cfs_adm_saferkey *objp;
++ {
++ 	if (!xdr_long(xdrs, &objp->pl)) {
++ 		return (FALSE);
++ 	}
++ 	if (!xdr_vector(xdrs, (char *)objp->primary, 16, sizeof(u_char), xdr_u_char)) {
++ 		return (FALSE);
++ 	}
++ 	if (!xdr_vector(xdrs, (char *)objp->secondary, 16, sizeof(u_char), xdr_u_char)) {
++ 		return (FALSE);
++ 	}
++ 	return (TRUE);
++ }
++ 
++ bool_t
++ xdr_cfs_admkey(xdrs, objp)
++ 	XDR *xdrs;
++ 	cfs_admkey *objp;
++ {
++ 	if (!xdr_ciphers(xdrs, &objp->cipher)) {
++ 		return (FALSE);
++ 	}
++ 	switch (objp->cipher) {
++ 	case CFS_STD_DES:
++ 		if (!xdr_cfs_adm_deskey(xdrs, &objp->cfs_admkey_u.deskey)) {
++ 			return (FALSE);
++ 		}
++ 		break;
++ 	case CFS_THREE_DES:
++ 		if (!xdr_cfs_adm_3deskey(xdrs, &objp->cfs_admkey_u.des3key)) {
++ 			return (FALSE);
++ 		}
++ 		break;
++ 	case CFS_BLOWFISH:
++ 		if (!xdr_cfs_adm_blowkey(xdrs, &objp->cfs_admkey_u.blowkey)) {
++ 			return (FALSE);
++ 		}
++ 		break;
++ 	case CFS_MACGUFFIN:
++ 		if (!xdr_cfs_adm_mcgkey(xdrs, &objp->cfs_admkey_u.mcgkey)) {
++ 			return (FALSE);
++ 		}
++ 		break;
++ 	case CFS_SAFER_SK128:
++ 		if (!xdr_cfs_adm_saferkey(xdrs, &objp->cfs_admkey_u.saferkey)) {
++ 			return (FALSE);
++ 		}
++ 		break;
++ 	}
++ 	return (TRUE);
++ }
++ 
++ bool_t
++ xdr_cfs_attachargs(xdrs, objp)
++ 	XDR *xdrs;
++ 	cfs_attachargs *objp;
++ {
++ 	if (!xdr_string(xdrs, &objp->dirname, CFS_MAXNAME)) {
++ 		return (FALSE);
++ 	}
++ 	if (!xdr_string(xdrs, &objp->name, CFS_MAXCOMP)) {
++ 		return (FALSE);
++ 	}
++ 	if (!xdr_cfs_admkey(xdrs, &objp->key)) {
++ 		return (FALSE);
++ 	}
++ 	if (!xdr_int(xdrs, &objp->uid)) {
++ 		return (FALSE);
++ 	}
++ 	if (!xdr_int(xdrs, &objp->highsec)) {
++ 		return (FALSE);
++ 	}
++ 	if (!xdr_bool(xdrs, &objp->anon)) {
++ 		return (FALSE);
++ 	}
++ 	if (!xdr_int(xdrs, &objp->expire)) {
++ 		return (FALSE);
++ 	}
++ 	if (!xdr_int(xdrs, &objp->idle)) {
++ 		return (FALSE);
++ 	}
++ 	if (!xdr_int(xdrs, &objp->smsize)) {
++ 		return (FALSE);
++ 	}
++ 	return (TRUE);
++ }
++ 
++ bool_t
++ xdr_cfs_detachargs(xdrs, objp)
++ 	XDR *xdrs;
++ 	cfs_detachargs *objp;
++ {
++ 	if (!xdr_string(xdrs, &objp->name, CFS_MAXCOMP)) {
++ 		return (FALSE);
++ 	}
++ 	if (!xdr_int(xdrs, &objp->uid)) {
++ 		return (FALSE);
++ 	}
++ 	return (TRUE);
++ }
+diff -crN ./nfsproto.h ../cfs-1.3.1-LnxSlckwr/nfsproto.h
+*** ./nfsproto.h	Thu Jan  1 01:00:00 1970
+--- ../cfs-1.3.1-LnxSlckwr/nfsproto.h	Mon Dec 18 04:00:52 1995
+***************
+*** 0 ****
+--- 1,320 ----
++ /*
++  * Please do not edit this file.
++  * It was generated using rpcgen.
++  */
++ 
++ #include <rpc/types.h>
++ 
++ #define NFS_PORT 2049
++ #define NFS_MAXDATA 8192
++ #define NFS_MAXPATHLEN 1024
++ #define NFS_MAXNAMLEN 255
++ #define NFS_FHSIZE 32
++ #define NFS_COOKIESIZE 4
++ #define NFS_FIFO_DEV -1
++ #define NFSMODE_FMT 0170000
++ #define NFSMODE_DIR 0040000
++ #define NFSMODE_CHR 0020000
++ #define NFSMODE_BLK 0060000
++ #define NFSMODE_REG 0100000
++ #define NFSMODE_LNK 0120000
++ #define NFSMODE_SOCK 0140000
++ #define NFSMODE_FIFO 0010000
++ 
++ enum nfsstat {
++ 	NFS_OK = 0,
++ 	NFSERR_PERM = 1,
++ 	NFSERR_NOENT = 2,
++ 	NFSERR_IO = 5,
++ 	NFSERR_NXIO = 6,
++ 	NFSERR_ACCES = 13,
++ 	NFSERR_EXIST = 17,
++ 	NFSERR_NODEV = 19,
++ 	NFSERR_NOTDIR = 20,
++ 	NFSERR_ISDIR = 21,
++ 	NFSERR_FBIG = 27,
++ 	NFSERR_NOSPC = 28,
++ 	NFSERR_ROFS = 30,
++ 	NFSERR_NAMETOOLONG = 63,
++ 	NFSERR_NOTEMPTY = 66,
++ 	NFSERR_DQUOT = 69,
++ 	NFSERR_STALE = 70,
++ 	NFSERR_WFLUSH = 99,
++ };
++ typedef enum nfsstat nfsstat;
++ bool_t xdr_nfsstat();
++ 
++ enum ftype {
++ 	NFNON = 0,
++ 	NFREG = 1,
++ 	NFDIR = 2,
++ 	NFBLK = 3,
++ 	NFCHR = 4,
++ 	NFLNK = 5,
++ 	NFSOCK = 6,
++ 	NFBAD = 7,
++ 	NFFIFO = 8,
++ };
++ typedef enum ftype ftype;
++ bool_t xdr_ftype();
++ 
++ struct nfs_fh {
++ 	char data[NFS_FHSIZE];
++ };
++ typedef struct nfs_fh nfs_fh;
++ bool_t xdr_nfs_fh();
++ 
++ struct nfstime {
++ 	u_int seconds;
++ 	u_int useconds;
++ };
++ typedef struct nfstime nfstime;
++ bool_t xdr_nfstime();
++ 
++ struct fattr {
++ 	ftype type;
++ 	u_int mode;
++ 	u_int nlink;
++ 	u_int uid;
++ 	u_int gid;
++ 	u_int size;
++ 	u_int blocksize;
++ 	u_int rdev;
++ 	u_int blocks;
++ 	u_int fsid;
++ 	u_int fileid;
++ 	nfstime atime;
++ 	nfstime mtime;
++ 	nfstime ctime;
++ };
++ typedef struct fattr fattr;
++ bool_t xdr_fattr();
++ 
++ struct sattr {
++ 	u_int mode;
++ 	u_int uid;
++ 	u_int gid;
++ 	u_int size;
++ 	nfstime atime;
++ 	nfstime mtime;
++ };
++ typedef struct sattr sattr;
++ bool_t xdr_sattr();
++ 
++ typedef char *filename;
++ bool_t xdr_filename();
++ 
++ typedef char *nfspath;
++ bool_t xdr_nfspath();
++ 
++ struct attrstat {
++ 	nfsstat status;
++ 	union {
++ 		fattr attributes;
++ 	} attrstat_u;
++ };
++ typedef struct attrstat attrstat;
++ bool_t xdr_attrstat();
++ 
++ struct sattrargs {
++ 	nfs_fh file;
++ 	sattr attributes;
++ };
++ typedef struct sattrargs sattrargs;
++ bool_t xdr_sattrargs();
++ 
++ struct diropargs {
++ 	nfs_fh dir;
++ 	filename name;
++ };
++ typedef struct diropargs diropargs;
++ bool_t xdr_diropargs();
++ 
++ struct diropokres {
++ 	nfs_fh file;
++ 	fattr attributes;
++ };
++ typedef struct diropokres diropokres;
++ bool_t xdr_diropokres();
++ 
++ struct diropres {
++ 	nfsstat status;
++ 	union {
++ 		diropokres diropres;
++ 	} diropres_u;
++ };
++ typedef struct diropres diropres;
++ bool_t xdr_diropres();
++ 
++ struct readlinkres {
++ 	nfsstat status;
++ 	union {
++ 		nfspath data;
++ 	} readlinkres_u;
++ };
++ typedef struct readlinkres readlinkres;
++ bool_t xdr_readlinkres();
++ 
++ struct readargs {
++ 	nfs_fh file;
++ 	u_int offset;
++ 	u_int count;
++ 	u_int totalcount;
++ };
++ typedef struct readargs readargs;
++ bool_t xdr_readargs();
++ 
++ struct readokres {
++ 	fattr attributes;
++ 	struct {
++ 		u_int data_len;
++ 		char *data_val;
++ 	} data;
++ };
++ typedef struct readokres readokres;
++ bool_t xdr_readokres();
++ 
++ struct readres {
++ 	nfsstat status;
++ 	union {
++ 		readokres reply;
++ 	} readres_u;
++ };
++ typedef struct readres readres;
++ bool_t xdr_readres();
++ 
++ struct writeargs {
++ 	nfs_fh file;
++ 	u_int beginoffset;
++ 	u_int offset;
++ 	u_int totalcount;
++ 	struct {
++ 		u_int data_len;
++ 		char *data_val;
++ 	} data;
++ };
++ typedef struct writeargs writeargs;
++ bool_t xdr_writeargs();
++ 
++ struct createargs {
++ 	diropargs where;
++ 	sattr attributes;
++ };
++ typedef struct createargs createargs;
++ bool_t xdr_createargs();
++ 
++ struct renameargs {
++ 	diropargs from;
++ 	diropargs to;
++ };
++ typedef struct renameargs renameargs;
++ bool_t xdr_renameargs();
++ 
++ struct linkargs {
++ 	nfs_fh from;
++ 	diropargs to;
++ };
++ typedef struct linkargs linkargs;
++ bool_t xdr_linkargs();
++ 
++ struct symlinkargs {
++ 	diropargs from;
++ 	nfspath to;
++ 	sattr attributes;
++ };
++ typedef struct symlinkargs symlinkargs;
++ bool_t xdr_symlinkargs();
++ 
++ typedef char nfscookie[NFS_COOKIESIZE];
++ bool_t xdr_nfscookie();
++ 
++ struct readdirargs {
++ 	nfs_fh dir;
++ 	nfscookie cookie;
++ 	u_int count;
++ };
++ typedef struct readdirargs readdirargs;
++ bool_t xdr_readdirargs();
++ 
++ struct entry {
++ 	u_int fileid;
++ 	filename name;
++ 	nfscookie cookie;
++ 	struct entry *nextentry;
++ };
++ typedef struct entry entry;
++ bool_t xdr_entry();
++ 
++ struct dirlist {
++ 	entry *entries;
++ 	bool_t eof;
++ };
++ typedef struct dirlist dirlist;
++ bool_t xdr_dirlist();
++ 
++ struct readdirres {
++ 	nfsstat status;
++ 	union {
++ 		dirlist reply;
++ 	} readdirres_u;
++ };
++ typedef struct readdirres readdirres;
++ bool_t xdr_readdirres();
++ 
++ struct statfsokres {
++ 	u_int tsize;
++ 	u_int bsize;
++ 	u_int blocks;
++ 	u_int bfree;
++ 	u_int bavail;
++ };
++ typedef struct statfsokres statfsokres;
++ bool_t xdr_statfsokres();
++ 
++ struct statfsres {
++ 	nfsstat status;
++ 	union {
++ 		statfsokres reply;
++ 	} statfsres_u;
++ };
++ typedef struct statfsres statfsres;
++ bool_t xdr_statfsres();
++ 
++ #define NFS_PROGRAM ((u_long)100003)
++ #define NFS_VERSION ((u_long)2)
++ #define NFSPROC_NULL ((u_long)0)
++ extern void *nfsproc_null_2();
++ #define NFSPROC_GETATTR ((u_long)1)
++ extern attrstat *nfsproc_getattr_2();
++ #define NFSPROC_SETATTR ((u_long)2)
++ extern attrstat *nfsproc_setattr_2();
++ #define NFSPROC_ROOT ((u_long)3)
++ extern void *nfsproc_root_2();
++ #define NFSPROC_LOOKUP ((u_long)4)
++ extern diropres *nfsproc_lookup_2();
++ #define NFSPROC_READLINK ((u_long)5)
++ extern readlinkres *nfsproc_readlink_2();
++ #define NFSPROC_READ ((u_long)6)
++ extern readres *nfsproc_read_2();
++ #define NFSPROC_WRITECACHE ((u_long)7)
++ extern void *nfsproc_writecache_2();
++ #define NFSPROC_WRITE ((u_long)8)
++ extern attrstat *nfsproc_write_2();
++ #define NFSPROC_CREATE ((u_long)9)
++ extern diropres *nfsproc_create_2();
++ #define NFSPROC_REMOVE ((u_long)10)
++ extern nfsstat *nfsproc_remove_2();
++ #define NFSPROC_RENAME ((u_long)11)
++ extern nfsstat *nfsproc_rename_2();
++ #define NFSPROC_LINK ((u_long)12)
++ extern nfsstat *nfsproc_link_2();
++ #define NFSPROC_SYMLINK ((u_long)13)
++ extern nfsstat *nfsproc_symlink_2();
++ #define NFSPROC_MKDIR ((u_long)14)
++ extern diropres *nfsproc_mkdir_2();
++ #define NFSPROC_RMDIR ((u_long)15)
++ extern nfsstat *nfsproc_rmdir_2();
++ #define NFSPROC_READDIR ((u_long)16)
++ extern readdirres *nfsproc_readdir_2();
++ #define NFSPROC_STATFS ((u_long)17)
++ extern statfsres *nfsproc_statfs_2();
+diff -crN ./nfsproto_svr.c ../cfs-1.3.1-LnxSlckwr/nfsproto_svr.c
+*** ./nfsproto_svr.c	Thu Jan  1 01:00:00 1970
+--- ../cfs-1.3.1-LnxSlckwr/nfsproto_svr.c	Mon Dec 18 04:00:52 1995
+***************
+*** 0 ****
+--- 1,163 ----
++ /*
++  * Please do not edit this file.
++  * It was generated using rpcgen.
++  */
++ 
++ #include <stdio.h>
++ #include <rpc/rpc.h>
++ #include "nfsproto.h"
++ 
++ void
++ nfs_program_2(rqstp, transp)
++ 	struct svc_req *rqstp;
++ 	register SVCXPRT *transp;
++ {
++ 	union {
++ 		nfs_fh nfsproc_getattr_2_arg;
++ 		sattrargs nfsproc_setattr_2_arg;
++ 		diropargs nfsproc_lookup_2_arg;
++ 		nfs_fh nfsproc_readlink_2_arg;
++ 		readargs nfsproc_read_2_arg;
++ 		writeargs nfsproc_write_2_arg;
++ 		createargs nfsproc_create_2_arg;
++ 		diropargs nfsproc_remove_2_arg;
++ 		renameargs nfsproc_rename_2_arg;
++ 		linkargs nfsproc_link_2_arg;
++ 		symlinkargs nfsproc_symlink_2_arg;
++ 		createargs nfsproc_mkdir_2_arg;
++ 		diropargs nfsproc_rmdir_2_arg;
++ 		readdirargs nfsproc_readdir_2_arg;
++ 		nfs_fh nfsproc_statfs_2_arg;
++ 	} argument;
++ 	char *result;
++ 	bool_t (*xdr_argument)(), (*xdr_result)();
++ 	char *(*local)();
++ 
++ 	switch (rqstp->rq_proc) {
++ 	case NFSPROC_NULL:
++ 		xdr_argument = xdr_void;
++ 		xdr_result = xdr_void;
++ 		local = (char *(*)()) nfsproc_null_2;
++ 		break;
++ 
++ 	case NFSPROC_GETATTR:
++ 		xdr_argument = xdr_nfs_fh;
++ 		xdr_result = xdr_attrstat;
++ 		local = (char *(*)()) nfsproc_getattr_2;
++ 		break;
++ 
++ 	case NFSPROC_SETATTR:
++ 		xdr_argument = xdr_sattrargs;
++ 		xdr_result = xdr_attrstat;
++ 		local = (char *(*)()) nfsproc_setattr_2;
++ 		break;
++ 
++ 	case NFSPROC_ROOT:
++ 		xdr_argument = xdr_void;
++ 		xdr_result = xdr_void;
++ 		local = (char *(*)()) nfsproc_root_2;
++ 		break;
++ 
++ 	case NFSPROC_LOOKUP:
++ 		xdr_argument = xdr_diropargs;
++ 		xdr_result = xdr_diropres;
++ 		local = (char *(*)()) nfsproc_lookup_2;
++ 		break;
++ 
++ 	case NFSPROC_READLINK:
++ 		xdr_argument = xdr_nfs_fh;
++ 		xdr_result = xdr_readlinkres;
++ 		local = (char *(*)()) nfsproc_readlink_2;
++ 		break;
++ 
++ 	case NFSPROC_READ:
++ 		xdr_argument = xdr_readargs;
++ 		xdr_result = xdr_readres;
++ 		local = (char *(*)()) nfsproc_read_2;
++ 		break;
++ 
++ 	case NFSPROC_WRITECACHE:
++ 		xdr_argument = xdr_void;
++ 		xdr_result = xdr_void;
++ 		local = (char *(*)()) nfsproc_writecache_2;
++ 		break;
++ 
++ 	case NFSPROC_WRITE:
++ 		xdr_argument = xdr_writeargs;
++ 		xdr_result = xdr_attrstat;
++ 		local = (char *(*)()) nfsproc_write_2;
++ 		break;
++ 
++ 	case NFSPROC_CREATE:
++ 		xdr_argument = xdr_createargs;
++ 		xdr_result = xdr_diropres;
++ 		local = (char *(*)()) nfsproc_create_2;
++ 		break;
++ 
++ 	case NFSPROC_REMOVE:
++ 		xdr_argument = xdr_diropargs;
++ 		xdr_result = xdr_nfsstat;
++ 		local = (char *(*)()) nfsproc_remove_2;
++ 		break;
++ 
++ 	case NFSPROC_RENAME:
++ 		xdr_argument = xdr_renameargs;
++ 		xdr_result = xdr_nfsstat;
++ 		local = (char *(*)()) nfsproc_rename_2;
++ 		break;
++ 
++ 	case NFSPROC_LINK:
++ 		xdr_argument = xdr_linkargs;
++ 		xdr_result = xdr_nfsstat;
++ 		local = (char *(*)()) nfsproc_link_2;
++ 		break;
++ 
++ 	case NFSPROC_SYMLINK:
++ 		xdr_argument = xdr_symlinkargs;
++ 		xdr_result = xdr_nfsstat;
++ 		local = (char *(*)()) nfsproc_symlink_2;
++ 		break;
++ 
++ 	case NFSPROC_MKDIR:
++ 		xdr_argument = xdr_createargs;
++ 		xdr_result = xdr_diropres;
++ 		local = (char *(*)()) nfsproc_mkdir_2;
++ 		break;
++ 
++ 	case NFSPROC_RMDIR:
++ 		xdr_argument = xdr_diropargs;
++ 		xdr_result = xdr_nfsstat;
++ 		local = (char *(*)()) nfsproc_rmdir_2;
++ 		break;
++ 
++ 	case NFSPROC_READDIR:
++ 		xdr_argument = xdr_readdirargs;
++ 		xdr_result = xdr_readdirres;
++ 		local = (char *(*)()) nfsproc_readdir_2;
++ 		break;
++ 
++ 	case NFSPROC_STATFS:
++ 		xdr_argument = xdr_nfs_fh;
++ 		xdr_result = xdr_statfsres;
++ 		local = (char *(*)()) nfsproc_statfs_2;
++ 		break;
++ 
++ 	default:
++ 		svcerr_noproc(transp);
++ 		return;
++ 	}
++ 	bzero((char *)&argument, sizeof(argument));
++ 	if (!svc_getargs(transp, xdr_argument, &argument)) {
++ 		svcerr_decode(transp);
++ 		return;
++ 	}
++ 	result = (*local)(&argument, rqstp);
++ 	if (result != NULL && !svc_sendreply(transp, xdr_result, result)) {
++ 		svcerr_systemerr(transp);
++ 	}
++ 	if (!svc_freeargs(transp, xdr_argument, &argument)) {
++ 		fprintf(stderr, "unable to free arguments");
++ 		exit(1);
++ 	}
++ 	return;
++ }
+diff -crN ./nfsproto_xdr.c ../cfs-1.3.1-LnxSlckwr/nfsproto_xdr.c
+*** ./nfsproto_xdr.c	Thu Jan  1 01:00:00 1970
+--- ../cfs-1.3.1-LnxSlckwr/nfsproto_xdr.c	Mon Dec 18 04:00:52 1995
+***************
+*** 0 ****
+--- 1,503 ----
++ /*
++  * Please do not edit this file.
++  * It was generated using rpcgen.
++  */
++ 
++ #include <rpc/rpc.h>
++ #include "nfsproto.h"
++ 
++ bool_t
++ xdr_nfsstat(xdrs, objp)
++ 	XDR *xdrs;
++ 	nfsstat *objp;
++ {
++ 	if (!xdr_enum(xdrs, (enum_t *)objp)) {
++ 		return (FALSE);
++ 	}
++ 	return (TRUE);
++ }
++ 
++ bool_t
++ xdr_ftype(xdrs, objp)
++ 	XDR *xdrs;
++ 	ftype *objp;
++ {
++ 	if (!xdr_enum(xdrs, (enum_t *)objp)) {
++ 		return (FALSE);
++ 	}
++ 	return (TRUE);
++ }
++ 
++ bool_t
++ xdr_nfs_fh(xdrs, objp)
++ 	XDR *xdrs;
++ 	nfs_fh *objp;
++ {
++ 	if (!xdr_opaque(xdrs, objp->data, NFS_FHSIZE)) {
++ 		return (FALSE);
++ 	}
++ 	return (TRUE);
++ }
++ 
++ bool_t
++ xdr_nfstime(xdrs, objp)
++ 	XDR *xdrs;
++ 	nfstime *objp;
++ {
++ 	if (!xdr_u_int(xdrs, &objp->seconds)) {
++ 		return (FALSE);
++ 	}
++ 	if (!xdr_u_int(xdrs, &objp->useconds)) {
++ 		return (FALSE);
++ 	}
++ 	return (TRUE);
++ }
++ 
++ bool_t
++ xdr_fattr(xdrs, objp)
++ 	XDR *xdrs;
++ 	fattr *objp;
++ {
++ 	if (!xdr_ftype(xdrs, &objp->type)) {
++ 		return (FALSE);
++ 	}
++ 	if (!xdr_u_int(xdrs, &objp->mode)) {
++ 		return (FALSE);
++ 	}
++ 	if (!xdr_u_int(xdrs, &objp->nlink)) {
++ 		return (FALSE);
++ 	}
++ 	if (!xdr_u_int(xdrs, &objp->uid)) {
++ 		return (FALSE);
++ 	}
++ 	if (!xdr_u_int(xdrs, &objp->gid)) {
++ 		return (FALSE);
++ 	}
++ 	if (!xdr_u_int(xdrs, &objp->size)) {
++ 		return (FALSE);
++ 	}
++ 	if (!xdr_u_int(xdrs, &objp->blocksize)) {
++ 		return (FALSE);
++ 	}
++ 	if (!xdr_u_int(xdrs, &objp->rdev)) {
++ 		return (FALSE);
++ 	}
++ 	if (!xdr_u_int(xdrs, &objp->blocks)) {
++ 		return (FALSE);
++ 	}
++ 	if (!xdr_u_int(xdrs, &objp->fsid)) {
++ 		return (FALSE);
++ 	}
++ 	if (!xdr_u_int(xdrs, &objp->fileid)) {
++ 		return (FALSE);
++ 	}
++ 	if (!xdr_nfstime(xdrs, &objp->atime)) {
++ 		return (FALSE);
++ 	}
++ 	if (!xdr_nfstime(xdrs, &objp->mtime)) {
++ 		return (FALSE);
++ 	}
++ 	if (!xdr_nfstime(xdrs, &objp->ctime)) {
++ 		return (FALSE);
++ 	}
++ 	return (TRUE);
++ }
++ 
++ bool_t
++ xdr_sattr(xdrs, objp)
++ 	XDR *xdrs;
++ 	sattr *objp;
++ {
++ 	if (!xdr_u_int(xdrs, &objp->mode)) {
++ 		return (FALSE);
++ 	}
++ 	if (!xdr_u_int(xdrs, &objp->uid)) {
++ 		return (FALSE);
++ 	}
++ 	if (!xdr_u_int(xdrs, &objp->gid)) {
++ 		return (FALSE);
++ 	}
++ 	if (!xdr_u_int(xdrs, &objp->size)) {
++ 		return (FALSE);
++ 	}
++ 	if (!xdr_nfstime(xdrs, &objp->atime)) {
++ 		return (FALSE);
++ 	}
++ 	if (!xdr_nfstime(xdrs, &objp->mtime)) {
++ 		return (FALSE);
++ 	}
++ 	return (TRUE);
++ }
++ 
++ bool_t
++ xdr_filename(xdrs, objp)
++ 	XDR *xdrs;
++ 	filename *objp;
++ {
++ 	if (!xdr_string(xdrs, objp, NFS_MAXNAMLEN)) {
++ 		return (FALSE);
++ 	}
++ 	return (TRUE);
++ }
++ 
++ bool_t
++ xdr_nfspath(xdrs, objp)
++ 	XDR *xdrs;
++ 	nfspath *objp;
++ {
++ 	if (!xdr_string(xdrs, objp, NFS_MAXPATHLEN)) {
++ 		return (FALSE);
++ 	}
++ 	return (TRUE);
++ }
++ 
++ bool_t
++ xdr_attrstat(xdrs, objp)
++ 	XDR *xdrs;
++ 	attrstat *objp;
++ {
++ 	if (!xdr_nfsstat(xdrs, &objp->status)) {
++ 		return (FALSE);
++ 	}
++ 	switch (objp->status) {
++ 	case NFS_OK:
++ 		if (!xdr_fattr(xdrs, &objp->attrstat_u.attributes)) {
++ 			return (FALSE);
++ 		}
++ 		break;
++ 	}
++ 	return (TRUE);
++ }
++ 
++ bool_t
++ xdr_sattrargs(xdrs, objp)
++ 	XDR *xdrs;
++ 	sattrargs *objp;
++ {
++ 	if (!xdr_nfs_fh(xdrs, &objp->file)) {
++ 		return (FALSE);
++ 	}
++ 	if (!xdr_sattr(xdrs, &objp->attributes)) {
++ 		return (FALSE);
++ 	}
++ 	return (TRUE);
++ }
++ 
++ bool_t
++ xdr_diropargs(xdrs, objp)
++ 	XDR *xdrs;
++ 	diropargs *objp;
++ {
++ 	if (!xdr_nfs_fh(xdrs, &objp->dir)) {
++ 		return (FALSE);
++ 	}
++ 	if (!xdr_filename(xdrs, &objp->name)) {
++ 		return (FALSE);
++ 	}
++ 	return (TRUE);
++ }
++ 
++ bool_t
++ xdr_diropokres(xdrs, objp)
++ 	XDR *xdrs;
++ 	diropokres *objp;
++ {
++ 	if (!xdr_nfs_fh(xdrs, &objp->file)) {
++ 		return (FALSE);
++ 	}
++ 	if (!xdr_fattr(xdrs, &objp->attributes)) {
++ 		return (FALSE);
++ 	}
++ 	return (TRUE);
++ }
++ 
++ bool_t
++ xdr_diropres(xdrs, objp)
++ 	XDR *xdrs;
++ 	diropres *objp;
++ {
++ 	if (!xdr_nfsstat(xdrs, &objp->status)) {
++ 		return (FALSE);
++ 	}
++ 	switch (objp->status) {
++ 	case NFS_OK:
++ 		if (!xdr_diropokres(xdrs, &objp->diropres_u.diropres)) {
++ 			return (FALSE);
++ 		}
++ 		break;
++ 	}
++ 	return (TRUE);
++ }
++ 
++ bool_t
++ xdr_readlinkres(xdrs, objp)
++ 	XDR *xdrs;
++ 	readlinkres *objp;
++ {
++ 	if (!xdr_nfsstat(xdrs, &objp->status)) {
++ 		return (FALSE);
++ 	}
++ 	switch (objp->status) {
++ 	case NFS_OK:
++ 		if (!xdr_nfspath(xdrs, &objp->readlinkres_u.data)) {
++ 			return (FALSE);
++ 		}
++ 		break;
++ 	}
++ 	return (TRUE);
++ }
++ 
++ bool_t
++ xdr_readargs(xdrs, objp)
++ 	XDR *xdrs;
++ 	readargs *objp;
++ {
++ 	if (!xdr_nfs_fh(xdrs, &objp->file)) {
++ 		return (FALSE);
++ 	}
++ 	if (!xdr_u_int(xdrs, &objp->offset)) {
++ 		return (FALSE);
++ 	}
++ 	if (!xdr_u_int(xdrs, &objp->count)) {
++ 		return (FALSE);
++ 	}
++ 	if (!xdr_u_int(xdrs, &objp->totalcount)) {
++ 		return (FALSE);
++ 	}
++ 	return (TRUE);
++ }
++ 
++ bool_t
++ xdr_readokres(xdrs, objp)
++ 	XDR *xdrs;
++ 	readokres *objp;
++ {
++ 	if (!xdr_fattr(xdrs, &objp->attributes)) {
++ 		return (FALSE);
++ 	}
++ 	if (!xdr_bytes(xdrs, (char **)&objp->data.data_val, (u_int *)&objp->data.data_len, NFS_MAXDATA)) {
++ 		return (FALSE);
++ 	}
++ 	return (TRUE);
++ }
++ 
++ bool_t
++ xdr_readres(xdrs, objp)
++ 	XDR *xdrs;
++ 	readres *objp;
++ {
++ 	if (!xdr_nfsstat(xdrs, &objp->status)) {
++ 		return (FALSE);
++ 	}
++ 	switch (objp->status) {
++ 	case NFS_OK:
++ 		if (!xdr_readokres(xdrs, &objp->readres_u.reply)) {
++ 			return (FALSE);
++ 		}
++ 		break;
++ 	}
++ 	return (TRUE);
++ }
++ 
++ bool_t
++ xdr_writeargs(xdrs, objp)
++ 	XDR *xdrs;
++ 	writeargs *objp;
++ {
++ 	if (!xdr_nfs_fh(xdrs, &objp->file)) {
++ 		return (FALSE);
++ 	}
++ 	if (!xdr_u_int(xdrs, &objp->beginoffset)) {
++ 		return (FALSE);
++ 	}
++ 	if (!xdr_u_int(xdrs, &objp->offset)) {
++ 		return (FALSE);
++ 	}
++ 	if (!xdr_u_int(xdrs, &objp->totalcount)) {
++ 		return (FALSE);
++ 	}
++ 	if (!xdr_bytes(xdrs, (char **)&objp->data.data_val, (u_int *)&objp->data.data_len, NFS_MAXDATA)) {
++ 		return (FALSE);
++ 	}
++ 	return (TRUE);
++ }
++ 
++ bool_t
++ xdr_createargs(xdrs, objp)
++ 	XDR *xdrs;
++ 	createargs *objp;
++ {
++ 	if (!xdr_diropargs(xdrs, &objp->where)) {
++ 		return (FALSE);
++ 	}
++ 	if (!xdr_sattr(xdrs, &objp->attributes)) {
++ 		return (FALSE);
++ 	}
++ 	return (TRUE);
++ }
++ 
++ bool_t
++ xdr_renameargs(xdrs, objp)
++ 	XDR *xdrs;
++ 	renameargs *objp;
++ {
++ 	if (!xdr_diropargs(xdrs, &objp->from)) {
++ 		return (FALSE);
++ 	}
++ 	if (!xdr_diropargs(xdrs, &objp->to)) {
++ 		return (FALSE);
++ 	}
++ 	return (TRUE);
++ }
++ 
++ bool_t
++ xdr_linkargs(xdrs, objp)
++ 	XDR *xdrs;
++ 	linkargs *objp;
++ {
++ 	if (!xdr_nfs_fh(xdrs, &objp->from)) {
++ 		return (FALSE);
++ 	}
++ 	if (!xdr_diropargs(xdrs, &objp->to)) {
++ 		return (FALSE);
++ 	}
++ 	return (TRUE);
++ }
++ 
++ bool_t
++ xdr_symlinkargs(xdrs, objp)
++ 	XDR *xdrs;
++ 	symlinkargs *objp;
++ {
++ 	if (!xdr_diropargs(xdrs, &objp->from)) {
++ 		return (FALSE);
++ 	}
++ 	if (!xdr_nfspath(xdrs, &objp->to)) {
++ 		return (FALSE);
++ 	}
++ 	if (!xdr_sattr(xdrs, &objp->attributes)) {
++ 		return (FALSE);
++ 	}
++ 	return (TRUE);
++ }
++ 
++ bool_t
++ xdr_nfscookie(xdrs, objp)
++ 	XDR *xdrs;
++ 	nfscookie objp;
++ {
++ 	if (!xdr_opaque(xdrs, objp, NFS_COOKIESIZE)) {
++ 		return (FALSE);
++ 	}
++ 	return (TRUE);
++ }
++ 
++ bool_t
++ xdr_readdirargs(xdrs, objp)
++ 	XDR *xdrs;
++ 	readdirargs *objp;
++ {
++ 	if (!xdr_nfs_fh(xdrs, &objp->dir)) {
++ 		return (FALSE);
++ 	}
++ 	if (!xdr_nfscookie(xdrs, objp->cookie)) {
++ 		return (FALSE);
++ 	}
++ 	if (!xdr_u_int(xdrs, &objp->count)) {
++ 		return (FALSE);
++ 	}
++ 	return (TRUE);
++ }
++ 
++ bool_t
++ xdr_entry(xdrs, objp)
++ 	XDR *xdrs;
++ 	entry *objp;
++ {
++ 	if (!xdr_u_int(xdrs, &objp->fileid)) {
++ 		return (FALSE);
++ 	}
++ 	if (!xdr_filename(xdrs, &objp->name)) {
++ 		return (FALSE);
++ 	}
++ 	if (!xdr_nfscookie(xdrs, objp->cookie)) {
++ 		return (FALSE);
++ 	}
++ 	if (!xdr_pointer(xdrs, (char **)&objp->nextentry, sizeof(entry), xdr_entry)) {
++ 		return (FALSE);
++ 	}
++ 	return (TRUE);
++ }
++ 
++ bool_t
++ xdr_dirlist(xdrs, objp)
++ 	XDR *xdrs;
++ 	dirlist *objp;
++ {
++ 	if (!xdr_pointer(xdrs, (char **)&objp->entries, sizeof(entry), xdr_entry)) {
++ 		return (FALSE);
++ 	}
++ 	if (!xdr_bool(xdrs, &objp->eof)) {
++ 		return (FALSE);
++ 	}
++ 	return (TRUE);
++ }
++ 
++ bool_t
++ xdr_readdirres(xdrs, objp)
++ 	XDR *xdrs;
++ 	readdirres *objp;
++ {
++ 	if (!xdr_nfsstat(xdrs, &objp->status)) {
++ 		return (FALSE);
++ 	}
++ 	switch (objp->status) {
++ 	case NFS_OK:
++ 		if (!xdr_dirlist(xdrs, &objp->readdirres_u.reply)) {
++ 			return (FALSE);
++ 		}
++ 		break;
++ 	}
++ 	return (TRUE);
++ }
++ 
++ bool_t
++ xdr_statfsokres(xdrs, objp)
++ 	XDR *xdrs;
++ 	statfsokres *objp;
++ {
++ 	if (!xdr_u_int(xdrs, &objp->tsize)) {
++ 		return (FALSE);
++ 	}
++ 	if (!xdr_u_int(xdrs, &objp->bsize)) {
++ 		return (FALSE);
++ 	}
++ 	if (!xdr_u_int(xdrs, &objp->blocks)) {
++ 		return (FALSE);
++ 	}
++ 	if (!xdr_u_int(xdrs, &objp->bfree)) {
++ 		return (FALSE);
++ 	}
++ 	if (!xdr_u_int(xdrs, &objp->bavail)) {
++ 		return (FALSE);
++ 	}
++ 	return (TRUE);
++ }
++ 
++ bool_t
++ xdr_statfsres(xdrs, objp)
++ 	XDR *xdrs;
++ 	statfsres *objp;
++ {
++ 	if (!xdr_nfsstat(xdrs, &objp->status)) {
++ 		return (FALSE);
++ 	}
++ 	switch (objp->status) {
++ 	case NFS_OK:
++ 		if (!xdr_statfsokres(xdrs, &objp->statfsres_u.reply)) {
++ 			return (FALSE);
++ 		}
++ 		break;
++ 	}
++ 	return (TRUE);
++ }
